@@ -14,25 +14,6 @@
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
 
-# --------------------------------------------------------------------------------------
-#  Copyright(C) 2023 yntha                                                             -
-#                                                                                      -
-#  This program is free software: you can redistribute it and/or modify it under       -
-#  the terms of the GNU General Public License as published by the Free Software       -
-#  Foundation, either version 3 of the License, or (at your option) any later          -
-#  version.                                                                            -
-#                                                                                      -
-#  This program is distributed in the hope that it will be useful, but WITHOUT ANY     -
-#  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A     -
-#  PARTICULAR PURPOSE. See the GNU General Public License for more details.            -
-#                                                                                      -
-#  You should have received a copy of the GNU General Public License along with        -
-#  this program. If not, see <http://www.gnu.org/licenses/>.                           -
-# --------------------------------------------------------------------------------------
-
-# things to keep in mind:
-# - all operations must result in a 32-bit integer.
-
 import typing
 
 # maximum byte length for a LEB128.
@@ -186,7 +167,6 @@ class _SLEB(_LEB128):
         super().__init__(num)
 
     @classmethod
-    # todo: this subtracts 1 from the result.
     def decode(cls, data: bytes) -> typing.Self:
         if len(data) == 0:
             raise InvalidVarint("Data buffer was empty.")
