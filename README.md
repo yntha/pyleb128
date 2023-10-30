@@ -7,6 +7,11 @@ Supports the following types:
 * Signed LEB128
 * Unsigned LEB128 +1 ([ULEB128P1](https://source.android.com/docs/core/runtime/dex-format#leb128))
 
+# Installing
+```
+python -m pip install -U pyleb128
+```
+
 # Example Usage
 ```python
 from pyleb128 import uleb128, sleb128
