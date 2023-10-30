@@ -7,6 +7,9 @@ Supports the following types:
 * Signed LEB128
 * Unsigned LEB128 +1 ([ULEB128P1](https://source.android.com/docs/core/runtime/dex-format#leb128))
 
+# Note
+The LEB classes all inherit from `int` and have all the operations implemented. The type of the result from any int operation will always be the type of the lhs. If the lhs is an int, then the type is an int. If the lhs is a LEB type, then the resulting type is a LEB.
+
 # Installing
 ```
 python -m pip install -U pyleb128
