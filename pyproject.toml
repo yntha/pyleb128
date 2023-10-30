@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "pyleb128"
+version = "0.1.2"
+description = "Powerful little-endian base-128 encoding/decoding library for Python 3."
+authors = ["yntha <bguznvjk@gmail.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+homepage = "https://github.com/yntha/pyleb128"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
