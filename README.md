@@ -22,9 +22,15 @@ from pyleb128 import uleb128, sleb128
 # unsigned
 print(uleb128.decode(b'\xff\xff\x03'))  # 65535
 print(uleb128.decode(b'\xff\xff\x03').encoded)  # b'\xff\xff\x03'
-print(uleb128.decode(b'\xff\xff\x03', p1 = True))  # decode with as ULEB128P1
+print(uleb128.decode(b'\xff\xff\x03', p1=True))  # decode with as ULEB128P1
 
 # signed
 print(sleb128.decode(b'\xf3\xff\xff\xff\x0f'))  # -13
 print(uleb128.decode(b'\xf3\xff\xff\xff\x0f').encoded)  # b'\xf3\xff\xff\xff\x0f'
+
+# can decode from a binary stream, too:
+import io
+
+stream = io.BytesIO(b'\xff\xff\x03') 
+print(uleb128.decode_stream(stream, p1=True))
 ```
