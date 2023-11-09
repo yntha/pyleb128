@@ -115,6 +115,33 @@ class _ULEB(_LEB128):
         super().__init__(num)
 
     @classmethod
+    def peek_size(cls, stream: typing.BinaryIO) -> int:
+        spos = stream.tell()
+        size = 0
+        byte = 0
+
+        for _ in range(LEB128_MAX_SIZE):
+            byte = stream.read(1)[0]
+
+            if byte < 0x7F:
+                size += 1
+                break
+
+            size += 1
+
+        # check msb on final byte. raise if set.
+        if byte & 0x80 == 0x80:
+            raise InvalidVarint("Invalid uleb128 sequence.")
+
+        stream.seek(spos)
+
+        return size
+
+    @classmethod
+    def decode_stream(cls, stream: typing.BinaryIO, p1: bool = False):
+        return cls.decode(stream.read(cls.peek_size(stream)), p1)
+
+    @classmethod
     def decode(cls, data: bytes, p1: bool = False) -> typing.Self:
         if len(data) == 0:
             raise InvalidVarint("Data buffer was empty.")
@@ -165,6 +192,28 @@ class _SLEB(_LEB128):
 
     def __init__(self, num: int):
         super().__init__(num)
+
+    @classmethod
+    def peek_size(cls, stream: typing.BinaryIO) -> int:
+        spos = stream.tell()
+        size = 0
+
+        for _ in range(LEB128_MAX_SIZE):
+            byte = stream.read(1)[0]
+
+            if byte < 0x7F:
+                size += 1
+                break
+
+            size += 1
+
+        stream.seek(spos)
+
+        return size
+
+    @classmethod
+    def decode_stream(cls, stream: typing.BinaryIO):
+        return cls.decode(stream.read(cls.peek_size(stream)))
 
     @classmethod
     def decode(cls, data: bytes) -> typing.Self:
