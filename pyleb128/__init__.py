@@ -107,9 +107,9 @@ class _LEB128(int):
 
 class _ULEB(_LEB128):
     def __new__(cls, num, *args, **kwargs):
-        return super().__new__(cls, overflow_uint(num), *args, **kwargs)
+        return super().__new__(cls, num, *args, **kwargs)
 
-    def __init__(self, num: int, p1: bool):
+    def __init__(self, num: int, p1: bool=False):
         self.p1 = p1
 
         super().__init__(num)
@@ -161,13 +161,13 @@ class _ULEB(_LEB128):
         shift_mod = 1
 
         while len(data_buffer) > 0:
-            decoded_int += ((current_byte & 0x7F) << (shift_mod * 7))
+            decoded_int += (current_byte & 0x7F) << (shift_mod * 7)
 
             shift_mod += 1
             current_byte = data_buffer.pop(0)
 
         decoded_int += current_byte << (shift_mod * 7)
-        return cls(decoded_int - p1, p1)
+        return cls(overflow_uint(decoded_int - p1), p1)
 
     @property
     def encoded(self) -> bytes:
@@ -188,7 +188,7 @@ class _ULEB(_LEB128):
 
 class _SLEB(_LEB128):
     def __new__(cls, num, *args, **kwargs):
-        return super().__new__(cls, overflow_sint(num), *args, **kwargs)
+        return super().__new__(cls, num, *args, **kwargs)
 
     def __init__(self, num: int):
         super().__init__(num)
@@ -235,7 +235,7 @@ class _SLEB(_LEB128):
         shift_mod = 1
 
         while len(data_buffer) > 0:
-            decoded_int += ((current_byte & 0x7F) << (shift_mod * 7))
+            decoded_int += (current_byte & 0x7F) << (shift_mod * 7)
 
             shift_mod += 1
             current_byte = data_buffer.pop(0)
@@ -245,15 +245,17 @@ class _SLEB(_LEB128):
         if (current_byte & 0x40) != 0:
             decoded_int |= -(1 << (shift_mod * 7) + 7)
 
-        return cls(decoded_int)
+        return cls(overflow_sint(decoded_int))
 
     @property
     def encoded(self) -> bytes:
         encoded_int = bytearray()
-        value = overflow_uint(self.value)  # we're keeping the raw value as an unsigned int.
+        value = overflow_uint(
+            self.value
+        )  # we're keeping the raw value as an unsigned int.
 
         if value >= 0:
-            while value > 0x3f:
+            while value > 0x3F:
                 encoded_int.append(0x80 | (value & 0x7F))
                 value = (value % 0x100000000) >> 7  # lsr (>>>) in java
 
