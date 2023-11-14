@@ -20,6 +20,7 @@ python -m pip install -U pyleb128
 from pyleb128 import uleb128, sleb128
 
 # unsigned
+print(uleb128(0xffff).size)  # 2
 print(uleb128.decode(b'\xff\xff\x03'))  # 65535
 print(uleb128.decode(b'\xff\xff\x03').encoded)  # b'\xff\xff\x03'
 print(uleb128.decode(b'\xff\xff\x03', p1=True))  # decode with as ULEB128P1
