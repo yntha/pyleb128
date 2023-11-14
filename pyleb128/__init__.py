@@ -97,19 +97,20 @@ class _LEB128(int):
 
         while True:
             n >>= 7
-            s += 1
 
             if n <= 0:
                 break
 
-        return max(s - 1, 1)
+            s += 1
+
+        return max(s, 1)
 
 
 class _ULEB(_LEB128):
     def __new__(cls, num, *args, **kwargs):
         return super().__new__(cls, num, *args, **kwargs)
 
-    def __init__(self, num: int, p1: bool=False):
+    def __init__(self, num: int, p1: bool = False):
         self.p1 = p1
 
         super().__init__(num)
