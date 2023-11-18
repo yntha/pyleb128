@@ -13,11 +13,42 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
-from ._base import _LEB128, InvalidVarint, LEB128_MAX_SIZE
-from ._sleb import _SLEB
-from ._uleb import _ULEB
+
+# maximum byte length for a LEB128.
+LEB128_MAX_SIZE = 5
 
 
-leb128 = _LEB128
-uleb128 = _ULEB
-sleb128 = _SLEB
+class InvalidVarint(ValueError):
+    pass
+
+
+class _LEB128(int):
+    def __new__(cls, num: int, *args, **kwargs):
+        if num is None:
+            num = 0
+
+        return super().__new__(cls, num)
+
+    def __init__(self, num: int):
+        self.value = num
+        self.size = self.calcsize(num)
+
+    def __repr__(self):
+        return self.encoded.hex()
+
+    def __str__(self):
+        return str(self.value)
+
+    @staticmethod
+    def calcsize(n):
+        s = 0
+
+        while True:
+            n >>= 7
+
+            if n <= 0:
+                break
+
+            s += 1
+
+        return max(s, 1)
