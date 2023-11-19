@@ -33,9 +33,6 @@ class _LEB128(int):
         self.value = num
         self.size = self.calcsize(num)
 
-    def __repr__(self):
-        return self.encoded.hex()
-
     def __str__(self):
         return str(self.value)
 

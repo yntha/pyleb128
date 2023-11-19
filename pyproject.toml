@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyleb128"
-version = "0.2.1"
+version = "0.2.3"
 description = "Powerful little-endian base-128 encoding/decoding library for Python 3."
 authors = ["yntha <bguznvjk@gmail.com>"]
 license = "GPL-3.0-or-later"
