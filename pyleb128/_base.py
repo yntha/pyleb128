@@ -31,7 +31,10 @@ class _LEB128(int):
 
     def __init__(self, num: int):
         self.value = num
-        self.size = self.calcsize(num)
+
+    @property
+    def size(self):
+        return len(self.encoded)
 
     def __str__(self):
         return str(self.value)

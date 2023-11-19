@@ -26,13 +26,10 @@ class _ULEB(_LEB128):
     def __new__(cls, num, *args, **kwargs):
         return super().__new__(cls, num, *args, **kwargs)
 
-    def __init__(self, num: int, p1: bool = False, _is_decoded: bool = False):
+    def __init__(self, num: int, p1: bool = False):
         self.p1 = p1
 
         super().__init__(num)
-
-        if not _is_decoded:
-            self.size = len(self.encoded)
 
     def __add__(self, other):
         return self.__class__(super().__add__(other), self.p1)
@@ -130,7 +127,7 @@ class _ULEB(_LEB128):
         decoded_int = current_byte
 
         if decoded_int < 0x7F:
-            return cls(decoded_int - p1, p1, True)
+            return cls(decoded_int - p1, p1)
 
         decoded_int &= 0x7F
 
@@ -144,7 +141,7 @@ class _ULEB(_LEB128):
             current_byte = data_buffer.pop(0)
 
         decoded_int += current_byte << (shift_mod * 7)
-        return cls(overflow_uint(decoded_int - p1), p1, True)
+        return cls(overflow_uint(decoded_int - p1), p1)
 
     @property
     def encoded(self) -> bytes:
