@@ -26,8 +26,11 @@ class _SLEB(_LEB128):
     def __new__(cls, num, *args, **kwargs):
         return super().__new__(cls, num, *args, **kwargs)
 
-    def __init__(self, num: int):
+    def __init__(self, num: int, _is_decoded: bool = False):
         super().__init__(num)
+
+        if not _is_decoded:
+            self.size = len(self.encoded)
 
     def __add__(self, other):
         return self.__class__(super().__add__(other))
@@ -120,7 +123,7 @@ class _SLEB(_LEB128):
         decoded_int = current_byte
 
         if decoded_int < 0x7F:
-            return cls(decoded_int)
+            return cls(decoded_int, True)
 
         decoded_int &= 0x7F
 
@@ -138,7 +141,7 @@ class _SLEB(_LEB128):
         if (current_byte & 0x40) != 0:
             decoded_int |= -(1 << (shift_mod * 7) + 7)
 
-        return cls(overflow_sint(decoded_int))
+        return cls(overflow_sint(decoded_int), True)
 
     @property
     def encoded(self) -> bytes:
